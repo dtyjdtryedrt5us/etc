@@ -3,6 +3,9 @@ powershell
 # bat化
 @powershell -NoProfile -ExecutionPolicy RemoteSigned "$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s" %*&goto:eof 
 
+#↑のbatで引数を受け取りたい場合、powershell本文で下記のように書けば受け取れる。ドラッグアンドドロップも可
+
+
 # パッケージ追加（excel)
 if(!(Get-Module -ListAvailable -Name ImportExcel)){ Install-Module ImportExcel -Scope CurrentUser -Force }
 
@@ -34,3 +37,12 @@ Import-Excel .\data.xlsx -StartRow 2 | select -Skip 2 | ConvertTo-Json
 # 行を跨いだ処理（改行の置換等）をする場合はC#のReadAllTextを使うと楽で安全。 
 # -joinの場合、改行を連結しようとすると全てCRLFに変換されてしまったりするので注意
 [System.IO.File]::ReadAllText(".\test.csv") | % {$_ -replace "[^`r]`n", "<br>"}
+
+# 引数受け取りの例
+@powershell -NoProfile -ExecutionPolicy RemoteSigned "$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s" %*&goto:eof 
+
+# C#関数のカレントディレクトリをコマンド実行時のカレントディレクトリに変更
+[System.IO.Directory]::SetCurrentDirectory((Get-Location).Path)
+
+$count = 0;
+$Args | % { % { [System.IO.File]::ReadAllText($_);$count++ } | % {$_ -replace "[^`r]`n", "<br>"} > ("test{0}.csv" -f $count) }
