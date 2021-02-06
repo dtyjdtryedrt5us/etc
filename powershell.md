@@ -55,12 +55,7 @@ Import-Excel .\data.xlsx -StartRow 2 | select -Skip 2 | ConvertTo-Json
 ```powershell
 [System.IO.File]::ReadAllText(".\test.csv") | % {$_ -replace "[^`r]`n", "<br>"}
 ```
-* 引数受け取りの例
-```powershell
-@powershell -NoProfile -ExecutionPolicy RemoteSigned "$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s" %*&goto:eof 
-```
-
-* C#関数のカレントディレクトリをコマンド実行時のカレントディレクトリに変更
+* テキストファイルを引数で受け取ってテキスト処理してから吐き出すバッチの例
 ```powershell
 @powershell -NoProfile -ExecutionPolicy RemoteSigned "$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s" %*&goto:eof 
 
