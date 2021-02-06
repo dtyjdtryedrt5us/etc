@@ -30,3 +30,7 @@ author.name}, {$_.custom_fields[0].value }, {$_.custom_fields[1].value}, descrip
 
 # excel
 Import-Excel .\data.xlsx -StartRow 2 | select -Skip 2 | ConvertTo-Json
+
+# 行を跨いだ処理（改行の置換等）をする場合はC#のReadAllTextを使うと楽で安全。 
+# -joinの場合、改行を連結しようとすると全てCRLFに変換されてしまったりするので注意
+[System.IO.File]::ReadAllText(".\test.csv") | % {$_ -replace "[^`r]`n", "<br>"}
