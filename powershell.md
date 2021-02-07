@@ -1,4 +1,8 @@
 
+* 使えそうなサイト
+  * [文字列操作](https://docs.microsoft.com/ja-jp/powershell/scripting/learn/deep-dives/everything-about-string-substitutions?view=powershell-7.1)
+
+
 * bat化
 ```powershell
 @powershell -NoProfile -ExecutionPolicy RemoteSigned "$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s" %*&goto:eof 
@@ -64,4 +68,11 @@ Import-Excel .\data.xlsx -StartRow 2 | select -Skip 2 | ConvertTo-Json
 
 $count = 0;
 $Args | % { % { [System.IO.File]::ReadAllText($_);$count++ } | % {$_ -replace "[^`r]`n", "<br>"} > ("test{0}.csv" -f $count) }
+```
+
+* ファイル名変更例
+```powershell
+$path = "c:\work\test.txt"
+# シンプルに置換
+$path -replace ".txt", "_modified.txt"
 ```
