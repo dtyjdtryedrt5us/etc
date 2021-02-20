@@ -76,3 +76,36 @@ $path = "c:\work\test.txt"
 # シンプルに置換
 $path -replace ".txt", "_modified.txt"
 ```
+
+* 名前付き引数の受け取り例
+```powershell
+@powershell -NoProfile -ExecutionPolicy RemoteSigned "$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s" %*&goto:eof 
+
+Param(
+	[Switch]$h,
+	$i,
+	$o, 
+	$num
+)
+
+if($h){@"
+help message
+-i 必須 入力ファイル
+-o 必須 入力内容はTest1かTest2のみ受け付ける
+-num 必須 ４桁の数値のみ受け付ける
+"@
+exit
+}
+
+if($Args -or !$i -or !$o -or !$num){@"
+入力形式が正しくありません。-hで使い方を確認してください。
+"@
+exit
+}
+
+
+"-i " + $i
+"-o " + $o
+"-num " + $num
+```
+
