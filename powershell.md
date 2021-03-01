@@ -109,12 +109,12 @@ exit
 "-num " + $num
 ```
 
-https://ericzimmerman.github.io/KapeDocs/#!Pages\3.-Using-KAPE.md
-https://ericzimmerman.github.io/KapeDocs/#!index.md
-https://ericzimmerman.github.io/#!index.md
-https://ericzimmerman.github.io/#!documentation.md
-https://ericzimmerman.github.io/#!index.md
-https://ericzimmerman.github.io/#!index.md#Requirements_and_troubleshooting
-https://binaryforay.blogspot.com/2016/02/lecmd-v0600-released.html
+* https://ericzimmerman.github.io/KapeDocs/#!Pages\3.-Using-KAPE.md
+* https://ericzimmerman.github.io/KapeDocs/#!index.md
+* https://ericzimmerman.github.io/#!index.md
+* https://ericzimmerman.github.io/#!documentation.md
+* https://ericzimmerman.github.io/#!index.md
+* https://ericzimmerman.github.io/#!index.md#Requirements_and_troubleshooting
+* https://binaryforay.blogspot.com/2016/02/lecmd-v0600-released.html
 
 
