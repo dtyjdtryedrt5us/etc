@@ -108,6 +108,20 @@ exit
 "-o " + $o
 "-num " + $num
 ```
+* groupの使い方
+```powershell
+Read *.log |
+Group-Object Date |
+%{
+    $m = $_ | select -ExpandProperty Group | measure -Property TimeTaken -Average -Maximum -Minimum
+    $_ | Add-Member Average $m.Average
+    $_ | Add-Member Max $m.Maximum
+    $_ | Add-Member Min $m.Minimum
+    $_
+}|
+select Name, Count, Average, Max, Min|
+ft -AutoSize
+```
 
 * https://ericzimmerman.github.io/KapeDocs/#!Pages\3.-Using-KAPE.md
 * https://ericzimmerman.github.io/KapeDocs/#!index.md
