@@ -123,6 +123,14 @@ select Name, Count, Average, Max, Min|
 ft -AutoSize
 ```
 
+* propertyの回し方（csv内の全レコードに置換処理を行う例
+```powershell
+Import-Csv .\test.txt | %{
+  $props = $_ | Get-Member -MemberType NoteProperty | Select -ExpandProperty Name
+  foreach($prop in $props) { $_.$prop = $_.$prop -replace "`n", "<br>" } $_
+} | Export-Csv -path data.csv -Encoding Default -NoTypeInformation
+```
+
 * https://ericzimmerman.github.io/KapeDocs/#!Pages\3.-Using-KAPE.md
 * https://ericzimmerman.github.io/KapeDocs/#!index.md
 * https://ericzimmerman.github.io/#!index.md
