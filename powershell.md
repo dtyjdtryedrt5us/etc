@@ -5,7 +5,7 @@
 
 * bat化
 ```powershell
-@powershell -NoProfile -ExecutionPolicy RemoteSigned "$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s" %*&goto:eof 
+@powershell -NoProfile -ExecutionPolicy RemoteSigned "set-location '%CD%'$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s" %*&goto:eof 
 
 # 引数を受け取りたい場合、powershell本文で下記のように書けば受け取れる。ドラッグアンドドロップされたファイル名もちゃんと格納される
 $arg0 = $Args[0]
@@ -13,6 +13,11 @@ $arg0 = $Args[0]
 # パイプライン処理で引数の中身全て処理する場合の書き方
 $Args | % { echo $_ }
 
+```
+
+* 上記の管理者権限昇格を自動で行う版
+```powershell
+@powershell -NoProfile -ExecutionPolicy RemoteSigned "if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){Start-Process powershell -ArgumentList \"cd %CD%;%~f0\" -Verb RunAs -WindowStyle Hidden -Wait}else{set-location '%CD%';$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s}" %*&goto:eof 
 ```
 
 * パッケージ追加（excel)
@@ -68,11 +73,6 @@ Import-Excel .\data.xlsx -StartRow 2 | select -Skip 2 | ConvertTo-Json
 
 $count = 0;
 $Args | % { % { [System.IO.File]::ReadAllText($_);$count++ } | % {$_ -replace "[^`r]`n", "<br>"} > ("test{0}.csv" -f $count) }
-```
-
-* 上記の管理者権限昇格を自動で行う版
-```powershell
-@powershell -NoProfile -ExecutionPolicy RemoteSigned "if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){Start-Process powershell -ArgumentList \"cd %CD%;%~f0\" -Verb RunAs -WindowStyle Hidden -Wait}else{set-location '%CD%';$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s}" %*&goto:eof 
 ```
 
 * ファイル名変更例
