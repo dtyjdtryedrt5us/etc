@@ -61,13 +61,18 @@ Import-Excel .\data.xlsx -StartRow 2 | select -Skip 2 | ConvertTo-Json
 ```
 * テキストファイルを引数で受け取ってテキスト処理してから吐き出すバッチの例
 ```powershell
-@powershell -NoProfile -ExecutionPolicy RemoteSigned "$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s" %*&goto:eof 
+@powershell -NoProfile -ExecutionPolicy RemoteSigned "set-location '%CD%';$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s" %*&goto:eof 
 
 # C#関数のカレントディレクトリをコマンド実行時のカレントディレクトリに変更
 [System.IO.Directory]::SetCurrentDirectory((Get-Location).Path)
 
 $count = 0;
 $Args | % { % { [System.IO.File]::ReadAllText($_);$count++ } | % {$_ -replace "[^`r]`n", "<br>"} > ("test{0}.csv" -f $count) }
+```
+
+* 上記の管理者権限昇格を自動で行う版
+```powershell
+@powershell -NoProfile -ExecutionPolicy RemoteSigned "if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){Start-Process powershell -ArgumentList \"cd %CD%;%~f0\" -Verb RunAs -WindowStyle Hidden -Wait}else{set-location '%CD%';$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s}" %*&goto:eof 
 ```
 
 * ファイル名変更例
@@ -130,6 +135,7 @@ Import-Csv .\test.txt | %{
   foreach($prop in $props) { $_.$prop = $_.$prop -replace "`n", "<br>" } $_
 } | Export-Csv -path data.csv -Encoding Default -NoTypeInformation
 ```
+
 
 * https://ericzimmerman.github.io/KapeDocs/#!Pages\3.-Using-KAPE.md
 * https://ericzimmerman.github.io/KapeDocs/#!index.md
