@@ -18,8 +18,11 @@ $Args | % { echo $_ }
 
 * 上記の管理者権限昇格を自動で行う版
 ```powershell
-@powershell -NoProfile -ExecutionPolicy RemoteSigned "if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){Start-Process powershell -ArgumentList \"cd %CD%;%~f0 %*\" -Verb RunAs -WindowStyle Hidden -Wait}else{set-location '%CD%';$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s %*}" &goto:eof 
+@@echo off&setlocal enabledelayedexpansion&for %%f in (%*) do (set a=!a!\\\"%%f\\\" ) 
+for %%f in (%*) do (set p=!p!"\"%%f\"" ) 
+powershell -NoProfile -ExecutionPolicy RemoteSigned "if (([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -ne $true){Start-Process powershell -ArgumentList '-NoProfile -ExecutionPolicy RemoteSigned','cd %CD%;%~f0 !a!' -Verb RunAs -WindowStyle Hidden -Wait}else{set-location '%CD%';$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt3})-join\"`n\");&$s !p!}" &goto:eof 
 
+$Args > test.txt
 
 ```
 
