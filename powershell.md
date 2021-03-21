@@ -5,7 +5,8 @@
 
 * bat化
 ```powershell
-@powershell -NoProfile -ExecutionPolicy RemoteSigned "set-location '%CD%'$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s" %*&goto:eof 
+@echo off&setlocal enabledelayedexpansion & for %%f in (%*) do (set p=!p!"\"%%f\"" ) 
+powershell -NoProfile -ExecutionPolicy RemoteSigned "set-location '%CD%';$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt2})-join\"`n\");&$s" !p!&goto:eof 
 
 # 引数を受け取りたい場合、powershell本文で下記のように書けば受け取れる。ドラッグアンドドロップされたファイル名もちゃんと格納される
 $arg0 = $Args[0]
@@ -68,7 +69,8 @@ Import-Excel .\data.xlsx -StartRow 2 | select -Skip 2 | ConvertTo-Json
 ```
 * テキストファイルを引数で受け取ってテキスト処理してから吐き出すバッチの例
 ```powershell
-@powershell -NoProfile -ExecutionPolicy RemoteSigned "set-location '%CD%';$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s" %*&goto:eof 
+@echo off&setlocal enabledelayedexpansion & for %%f in (%*) do (set p=!p!"\"%%f\"" ) 
+powershell -NoProfile -ExecutionPolicy RemoteSigned "set-location '%CD%';$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt2})-join\"`n\");&$s" !p!&goto:eof 
 
 # C#関数のカレントディレクトリをコマンド実行時のカレントディレクトリに変更
 [System.IO.Directory]::SetCurrentDirectory((Get-Location).Path)
@@ -86,7 +88,8 @@ $path -replace ".txt", "_modified.txt"
 
 * 名前付き引数の受け取り例
 ```powershell
-@powershell -NoProfile -ExecutionPolicy RemoteSigned "set-location '%CD%';$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s" %*&goto:eof 
+@echo off&setlocal enabledelayedexpansion & for %%f in (%*) do (set p=!p!"\"%%f\"" ) 
+powershell -NoProfile -ExecutionPolicy RemoteSigned "set-location '%CD%';$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt2})-join\"`n\");&$s" !p!&goto:eof 
 
 Param(
 	[Switch]$h,
