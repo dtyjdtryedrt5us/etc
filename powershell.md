@@ -84,7 +84,7 @@ $path -replace ".txt", "_modified.txt"
 
 * 名前付き引数の受け取り例
 ```powershell
-@powershell -NoProfile -ExecutionPolicy RemoteSigned "$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s" %*&goto:eof 
+@powershell -NoProfile -ExecutionPolicy RemoteSigned "set-location '%CD%';$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt1})-join\"`n\");&$s" %*&goto:eof 
 
 Param(
 	[Switch]$h,
