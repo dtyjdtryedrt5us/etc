@@ -5,7 +5,7 @@
 
 * bat化
 ```powershell
-@echo off&setlocal enabledelayedexpansion & for %%f in (%*) do (set p=!p!"\"%%f\"" ) 
+@echo off&setlocal enabledelayedexpansion&for %%f in (%*) do (set p=!p!"\"%%f\"" ) 
 powershell -NoProfile -ExecutionPolicy RemoteSigned "set-location '%CD%';$s=[scriptblock]::create((gc \"%~f0\"|?{$_.readcount -gt2})-join\"`n\");&$s" !p!&goto:eof 
 
 # 引数を受け取りたい場合、powershell本文で下記のように書けば受け取れる。ドラッグアンドドロップされたファイル名もちゃんと格納される
